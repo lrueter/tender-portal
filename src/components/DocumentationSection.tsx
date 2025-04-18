@@ -5,7 +5,8 @@ import {
   ListItemIcon, 
   ListItemText, 
   Link,
-  Alert 
+  Alert,
+  Typography 
 } from '@mui/material';
 import { PictureAsPdf } from '@mui/icons-material';
 import { S3Client, ListObjectsV2Command } from '@aws-sdk/client-s3';
@@ -18,6 +19,7 @@ interface Document {
 const DocumentationSection = () => {
   const [documents, setDocuments] = useState<Document[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchDocuments = async () => {
@@ -37,25 +39,40 @@ const DocumentationSection = () => {
 
         const response = await s3Client.send(command);
         
-        if (response.Contents) {
-          const docs = response.Contents.map(item => ({
-            key: item.Key!,
-            url: `https://${import.meta.env.VITE_AWS_BUCKET_NAME}.s3.${import.meta.env.VITE_AWS_REGION}.amazonaws.com/${item.Key}`
-          }));
+        if (response.Contents && response.Contents.length > 0) {
+          // Filter out the directory itself and create document objects
+          const docs = response.Contents
+            .filter(item => item.Key !== 'documentation/') // Filter out the directory
+            .map(item => ({
+              key: item.Key!,
+              url: `https://${import.meta.env.VITE_AWS_BUCKET_NAME}.s3.${import.meta.env.VITE_AWS_REGION}.amazonaws.com/${item.Key}`
+            }));
           setDocuments(docs);
-          setError(null);
+        } else {
+          setDocuments([]); // Ensure empty array when no documents found
         }
+        setError(null);
       } catch (error) {
         console.error('Error fetching documents:', error);
         setError('Failed to load documents. Please try again later.');
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchDocuments();
   }, []);
 
+  if (loading) {
+    return <Typography>Loading documents...</Typography>;
+  }
+
   if (error) {
     return <Alert severity="error">{error}</Alert>;
+  }
+
+  if (documents.length === 0) {
+    return <Typography>No documents available.</Typography>;
   }
 
   return (
