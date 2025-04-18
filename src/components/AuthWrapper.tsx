@@ -16,20 +16,7 @@ const AuthWrapper = ({ children }: AuthWrapperProps) => {
     <ClerkProvider publishableKey={clerkPubKey}>
       <SignedIn>{children}</SignedIn>
       <SignedOut>
-        <SignIn 
-          appearance={{
-            elements: {
-              rootBox: {
-                maxWidth: '400px',
-                width: '100%'
-              },
-              card: {
-                border: '1px solid #e5e5e5',
-                boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-              }
-            }
-          }}
-        />
+        <SignIn path="/sign-in" routing="path" magicLink={true} />
       </SignedOut>
     </ClerkProvider>
   );
