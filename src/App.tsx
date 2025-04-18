@@ -1,4 +1,3 @@
-import React from 'react';
 import { Container, Paper, Typography, Box } from '@mui/material';
 import DocumentationSection from './components/DocumentationSection';
 import QuoteUploadSection from './components/QuoteUploadSection';

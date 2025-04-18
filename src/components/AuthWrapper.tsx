@@ -1,11 +1,11 @@
-import React from 'react';
 import { ClerkProvider, SignIn, SignedIn, SignedOut } from '@clerk/clerk-react';
+import type { ReactNode } from 'react';
 
 interface AuthWrapperProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
-const AuthWrapper: React.FC<AuthWrapperProps> = ({ children }) => {
+const AuthWrapper = ({ children }: AuthWrapperProps) => {
   const clerkPubKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
   
   if (!clerkPubKey) {
