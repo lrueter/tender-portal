@@ -16,14 +16,8 @@ const AuthWrapper = ({ children }: AuthWrapperProps) => {
     <ClerkProvider publishableKey={clerkPubKey}>
       <SignedIn>{children}</SignedIn>
       <SignedOut>
-        <div style={{ 
-          display: 'flex', 
-          justifyContent: 'center', 
-          alignItems: 'center', 
-          minHeight: '100vh',
-          padding: '1rem'
-        }}>
-          <SignIn appearance={{
+        <SignIn 
+          appearance={{
             elements: {
               rootBox: {
                 maxWidth: '400px',
@@ -34,8 +28,8 @@ const AuthWrapper = ({ children }: AuthWrapperProps) => {
                 boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
               }
             }
-          }}/>
-        </div>
+          }}
+        />
       </SignedOut>
     </ClerkProvider>
   );
