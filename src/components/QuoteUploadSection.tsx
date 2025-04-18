@@ -9,6 +9,8 @@ import {
 import { Upload } from '@mui/icons-material';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 
+const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB in bytes
+
 const QuoteUploadSection = () => {
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
@@ -20,6 +22,15 @@ const QuoteUploadSection = () => {
     // Validate file type
     if (file.type !== 'application/pdf') {
       setMessage({ type: 'error', text: 'Please upload a PDF file' });
+      return;
+    }
+
+    // Validate file size
+    if (file.size > MAX_FILE_SIZE) {
+      setMessage({ 
+        type: 'error', 
+        text: `File is too large. Maximum size is ${MAX_FILE_SIZE / 1024 / 1024}MB` 
+      });
       return;
     }
 
@@ -59,7 +70,7 @@ const QuoteUploadSection = () => {
   return (
     <Box>
       <Typography gutterBottom>
-        Please upload your quote as a PDF file:
+        Please upload your quote as a PDF file (max {MAX_FILE_SIZE / 1024 / 1024}MB):
       </Typography>
 
       <Box sx={{ mt: 2 }}>
