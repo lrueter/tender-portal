@@ -16,7 +16,21 @@ const AuthWrapper = ({ children }: AuthWrapperProps) => {
     <ClerkProvider publishableKey={clerkPubKey}>
       <SignedIn>{children}</SignedIn>
       <SignedOut>
-        <SignIn routing="path" path="/sign-in" />
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'center', 
+          alignItems: 'center', 
+          minHeight: '100vh' 
+        }}>
+          <SignIn appearance={{
+            elements: {
+              rootBox: {
+                maxWidth: '400px',
+                width: '100%'
+              }
+            }
+          }}/>
+        </div>
       </SignedOut>
     </ClerkProvider>
   );
