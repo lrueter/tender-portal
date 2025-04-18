@@ -2,6 +2,7 @@ import { Container, Paper, Typography, Box, AppBar, Toolbar, Button } from '@mui
 import { useClerk } from '@clerk/clerk-react';
 import DocumentationSection from './components/DocumentationSection';
 import QuoteUploadSection from './components/QuoteUploadSection';
+import ProjectSection from './components/ProjectSection';
 import AuthWrapper from './components/AuthWrapper';
 
 // Create a separate component for the authenticated content
@@ -27,6 +28,13 @@ const AuthenticatedApp = () => {
 
       <Container maxWidth="lg" sx={{ py: 4 }}>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+          <Paper sx={{ p: 3 }}>
+            <Typography variant="h5" component="h2" gutterBottom>
+              Project
+            </Typography>
+            <ProjectSection />
+          </Paper>
+
           <Paper sx={{ p: 3 }}>
             <Typography variant="h5" component="h2" gutterBottom>
               Documentation
