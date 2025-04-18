@@ -1,7 +1,7 @@
 import React from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App'
-import '@clerk/clerk-react/dist/clerk-react.css'
+import './styles.css'
 
 const root = document.getElementById('root')
 if (root) {

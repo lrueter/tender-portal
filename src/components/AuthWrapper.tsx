@@ -20,13 +20,18 @@ const AuthWrapper = ({ children }: AuthWrapperProps) => {
           display: 'flex', 
           justifyContent: 'center', 
           alignItems: 'center', 
-          minHeight: '100vh' 
+          minHeight: '100vh',
+          padding: '1rem'
         }}>
           <SignIn appearance={{
             elements: {
               rootBox: {
                 maxWidth: '400px',
                 width: '100%'
+              },
+              card: {
+                border: '1px solid #e5e5e5',
+                boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
               }
             }
           }}/>
