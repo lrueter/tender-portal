@@ -21,7 +21,7 @@ const ProjectSection = () => {
 
         const command = new GetObjectCommand({
           Bucket: import.meta.env.VITE_AWS_BUCKET_NAME,
-          Key: 'documentation/markdown_example.md'
+          Key: 'markdown/markdown_example.md'
         });
 
         const response = await s3Client.send(command);
