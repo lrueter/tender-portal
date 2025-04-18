@@ -43,8 +43,7 @@ const QuoteUploadSection = () => {
         Bucket: import.meta.env.VITE_AWS_BUCKET_NAME,
         Key: fileName,
         Body: fileBuffer,
-        ContentType: 'application/pdf',
-        ACL: 'public-read' // Only if you want the uploaded files to be publicly readable
+        ContentType: 'application/pdf'
       });
 
       await s3Client.send(command);
