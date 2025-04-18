@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Typography, Alert, CircularProgress } from '@mui/material';
+import { Alert, CircularProgress } from '@mui/material';
 import ReactMarkdown from 'react-markdown';
 import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
 
