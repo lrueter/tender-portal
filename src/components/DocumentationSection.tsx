@@ -12,8 +12,8 @@ const DocumentationSection = () => {
     const fetchDocuments = async () => {
       try {
         console.log('Fetching documents...');
-        const documentsRef = ref(storage, 'documents');
-        console.log('Documents ref:', documentsRef);
+        const documentsRef = ref(storage, 'documentation');
+        console.log('Documentation ref:', documentsRef);
         
         const result = await listAll(documentsRef);
         console.log('List result:', result);
