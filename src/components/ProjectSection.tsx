@@ -13,13 +13,16 @@ const ProjectSection = () => {
     const fetchMarkdownContent = async () => {
       try {
         const markdownRef = ref(storage, 'markdown/markdown_example.md');
-        const data = await getBytes(markdownRef);
-        const content = new TextDecoder().decode(data);
+        
+        // Get the bytes directly instead of using fetch
+        const bytes = await getBytes(markdownRef);
+        const content = new TextDecoder().decode(bytes);
+        
         setMarkdownContent(content);
         setError(null);
       } catch (error) {
         console.error('Error fetching markdown content:', error);
-        setError('Failed to load project description');
+        setError('Failed to load project description. Please make sure the file exists in Firebase Storage.');
       } finally {
         setLoading(false);
       }
