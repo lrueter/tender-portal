@@ -6,8 +6,7 @@ import {
   Tabs, 
   Tab, 
   Box,
-  alpha,
-  useTheme
+  alpha
 } from '@mui/material';
 import { auth } from '../../firebase/config';
 
@@ -17,8 +16,6 @@ interface AppHeaderProps {
 }
 
 export function AppHeader({ tabValue, onTabChange }: AppHeaderProps) {
-  const theme = useTheme();
-
   return (
     <AppBar 
       position="static" 
