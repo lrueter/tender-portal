@@ -70,9 +70,6 @@ const DocumentationSection = () => {
 
   return (
     <Box sx={{ width: '100%', maxWidth: 800, margin: '0 auto' }}>
-      <Typography variant="h4" component="h2" gutterBottom>
-        Documentation
-      </Typography>
       {documents.length === 0 ? (
         <Paper sx={{ p: 3, bgcolor: 'background.default' }}>
           <Typography color="text.secondary">
