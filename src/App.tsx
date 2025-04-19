@@ -48,6 +48,11 @@ const theme = createTheme({
   palette: {
     primary: {
       main: '#1976d2',
+      light: '#4791db',
+      dark: '#115293',
+    },
+    secondary: {
+      main: '#ffffff',
     },
   },
 });
@@ -95,12 +100,41 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{ width: '100%', minHeight: '100vh', bgcolor: 'background.default' }}>
-        <AppBar position="static">
-          <Toolbar sx={{ justifyContent: 'space-between' }}>
-            <Typography variant="h6">
+        <AppBar 
+          position="static" 
+          sx={{ 
+            boxShadow: 3,
+            background: 'linear-gradient(to right, #1976d2, #1565c0)'
+          }}
+        >
+          <Toolbar 
+            sx={{ 
+              justifyContent: 'space-between',
+              minHeight: '72px',
+              px: { xs: 2, sm: 4 }
+            }}
+          >
+            <Typography 
+              variant="h6" 
+              sx={{ 
+                fontWeight: 600,
+                letterSpacing: 0.5,
+                fontSize: { xs: '1.1rem', sm: '1.3rem' }
+              }}
+            >
               Trade Tender Portal
             </Typography>
-            <Button color="inherit" onClick={() => auth.signOut()}>
+            <Button 
+              color="inherit" 
+              onClick={() => auth.signOut()}
+              sx={{
+                borderRadius: 2,
+                px: 3,
+                '&:hover': {
+                  backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                }
+              }}
+            >
               Logout
             </Button>
           </Toolbar>
@@ -108,10 +142,39 @@ function App() {
             value={tabValue} 
             onChange={handleTabChange}
             centered
-            sx={{ bgcolor: 'primary.main' }}
+            sx={{
+              '& .MuiTabs-indicator': {
+                backgroundColor: '#fff',
+                height: 3,
+              },
+              '& .MuiTab-root': {
+                color: 'rgba(255, 255, 255, 0.7)',
+                fontSize: { xs: '0.875rem', sm: '1rem' },
+                minHeight: '56px',
+                textTransform: 'none',
+                fontWeight: 500,
+                px: { xs: 2, sm: 4 },
+                '&.Mui-selected': {
+                  color: '#fff',
+                },
+                '&:hover': {
+                  color: '#fff',
+                  opacity: 1,
+                },
+              },
+              mb: 1
+            }}
           >
-            <Tab label="Project & Documentation" />
-            <Tab label="Quote Submission" />
+            <Tab 
+              label="Project & Documentation" 
+              icon={<Box sx={{ width: 4, height: 4, borderRadius: '50%', bgcolor: 'secondary.main', mb: 0.5 }} />}
+              iconPosition="start"
+            />
+            <Tab 
+              label="Quote Submission" 
+              icon={<Box sx={{ width: 4, height: 4, borderRadius: '50%', bgcolor: 'secondary.main', mb: 0.5 }} />}
+              iconPosition="start"
+            />
           </Tabs>
         </AppBar>
 
