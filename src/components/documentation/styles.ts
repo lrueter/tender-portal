@@ -2,7 +2,9 @@ export const styles = {
   container: {
     width: '100%',
     maxWidth: 800,
-    margin: '0 auto'
+    margin: '0 auto',
+    paddingLeft: 0,
+    paddingRight: 0
   },
   loadingBox: {
     textAlign: 'center',
@@ -12,6 +14,10 @@ export const styles = {
     p: 3,
     bgcolor: 'background.default'
   },
+  list: {
+    width: '100%',
+    padding: 0
+  },
   listItem: {
     '&:hover': {
       bgcolor: 'action.hover',
@@ -19,7 +25,8 @@ export const styles = {
     textDecoration: 'none',
     color: 'inherit',
     borderRadius: 1,
-    mb: 1
+    mb: 1,
+    paddingLeft: 0
   },
   documentName: {
     color: 'primary.main',

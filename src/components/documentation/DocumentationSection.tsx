@@ -49,7 +49,7 @@ const DocumentationSection = () => {
           </Typography>
         </Paper>
       ) : (
-        <List>
+        <List sx={styles.list}>
           {documents.map((doc) => (
             <ListItem
               key={doc.name}
