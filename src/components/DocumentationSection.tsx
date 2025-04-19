@@ -1,7 +1,18 @@
 import { useState, useEffect } from 'react';
 import { storage } from '../firebase/config';
 import { ref, listAll, getDownloadURL } from 'firebase/storage';
-import { CircularProgress, Alert, Typography } from '@mui/material';
+import { 
+  CircularProgress, 
+  Alert, 
+  Typography, 
+  List, 
+  ListItem, 
+  ListItemIcon, 
+  ListItemText,
+  Paper,
+  Box 
+} from '@mui/material';
+import { Description as DocumentIcon } from '@mui/icons-material';
 
 const DocumentationSection = () => {
   const [documents, setDocuments] = useState<Array<{ name: string; url: string }>>([]);
@@ -47,9 +58,9 @@ const DocumentationSection = () => {
 
   if (loading) {
     return (
-      <div style={{ textAlign: 'center', padding: '2rem' }}>
+      <Box sx={{ textAlign: 'center', padding: '2rem' }}>
         <CircularProgress />
-      </div>
+      </Box>
     );
   }
 
@@ -58,24 +69,55 @@ const DocumentationSection = () => {
   }
 
   return (
-    <div>
+    <Box sx={{ width: '100%', maxWidth: 800, margin: '0 auto' }}>
       <Typography variant="h4" component="h2" gutterBottom>
         Documentation
       </Typography>
       {documents.length === 0 ? (
-        <Typography>No documents found in the documentation folder</Typography>
+        <Paper sx={{ p: 3, bgcolor: 'background.default' }}>
+          <Typography color="text.secondary">
+            No documents found in the documentation folder
+          </Typography>
+        </Paper>
       ) : (
-        <ul>
-          {documents.map((doc) => (
-            <li key={doc.name}>
-              <a href={doc.url} target="_blank" rel="noopener noreferrer">
-                {doc.name}
-              </a>
-            </li>
-          ))}
-        </ul>
+        <Paper sx={{ mt: 2 }}>
+          <List>
+            {documents.map((doc) => (
+              <ListItem
+                key={doc.name}
+                component="a"
+                href={doc.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                button
+                sx={{
+                  '&:hover': {
+                    bgcolor: 'action.hover',
+                  },
+                  textDecoration: 'none',
+                  color: 'inherit'
+                }}
+              >
+                <ListItemIcon>
+                  <DocumentIcon color="primary" />
+                </ListItemIcon>
+                <ListItemText 
+                  primary={doc.name}
+                  primaryTypographyProps={{
+                    sx: { 
+                      color: 'primary.main',
+                      '&:hover': {
+                        textDecoration: 'underline'
+                      }
+                    }
+                  }}
+                />
+              </ListItem>
+            ))}
+          </List>
+        </Paper>
       )}
-    </div>
+    </Box>
   );
 };
 
