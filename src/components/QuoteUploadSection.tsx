@@ -8,7 +8,8 @@ import {
   Paper
 } from '@mui/material';
 import { Upload } from '@mui/icons-material';
-import { useAuth } from '../hooks/useAuth';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth } from '../firebase/config';
 import { uploadFile } from '../services/storage';
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB in bytes
@@ -18,7 +19,7 @@ const QuoteUploadSection = () => {
   const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
   const [dragActive, setDragActive] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { user } = useAuth();
+  const [user] = useAuthState(auth);
 
   const handleUpload = async (file: File) => {
     try {
