@@ -1,22 +1,47 @@
-import { Container, Paper, Typography, Button, Stack, Alert } from '@mui/material';
+import { Container, Paper, Typography, Button, Stack, Alert, TextField, Box } from '@mui/material';
 import { auth } from '../firebase/config';
 import { 
   GoogleAuthProvider, 
   GithubAuthProvider,
   TwitterAuthProvider,
   FacebookAuthProvider,
-  signInWithPopup
+  signInWithPopup,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword
 } from 'firebase/auth';
 import { useState } from 'react';
 import { 
   Google as GoogleIcon,
   GitHub as GitHubIcon,
   Twitter as TwitterIcon,
-  Facebook as FacebookIcon
+  Facebook as FacebookIcon,
+  Email as EmailIcon
 } from '@mui/icons-material';
 
 const LoginPage = () => {
   const [error, setError] = useState<string | null>(null);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [isSignUp, setIsSignUp] = useState(false);
+
+  const handleEmailAuth = async () => {
+    try {
+      setError(null);
+      if (!email || !password) {
+        setError('Please enter both email and password');
+        return;
+      }
+      
+      if (isSignUp) {
+        await createUserWithEmailAndPassword(auth, email, password);
+      } else {
+        await signInWithEmailAndPassword(auth, email, password);
+      }
+    } catch (error: any) {
+      setError(error.message);
+      console.error('Authentication error:', error);
+    }
+  };
 
   const handleSignIn = async (provider: any) => {
     try {
@@ -50,6 +75,47 @@ const LoginPage = () => {
         )}
 
         <Stack spacing={2}>
+          {/* Email/Password Section */}
+          <Box sx={{ mb: 2 }}>
+            <TextField
+              label="Email"
+              type="email"
+              fullWidth
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              sx={{ mb: 2 }}
+            />
+            <TextField
+              label="Password"
+              type="password"
+              fullWidth
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              sx={{ mb: 2 }}
+            />
+            <Button
+              variant="contained"
+              onClick={handleEmailAuth}
+              startIcon={<EmailIcon />}
+              fullWidth
+            >
+              {isSignUp ? 'Sign Up' : 'Sign In'} with Email
+            </Button>
+            <Button
+              variant="text"
+              onClick={() => setIsSignUp(!isSignUp)}
+              size="small"
+              sx={{ mt: 1 }}
+            >
+              {isSignUp ? 'Already have an account? Sign In' : 'Need an account? Sign Up'}
+            </Button>
+          </Box>
+
+          <Typography variant="body2" color="text.secondary">
+            Or continue with
+          </Typography>
+
+          {/* OAuth Providers */}
           <Button
             variant="contained"
             onClick={() => handleSignIn(new GoogleAuthProvider())}
