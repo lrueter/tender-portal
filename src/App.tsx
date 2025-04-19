@@ -1,6 +1,6 @@
 import { Container, Paper, Typography, Box, AppBar, Toolbar, Button } from '@mui/material';
 import { useClerk } from '@clerk/clerk-react';
-import DocumentationSection from './components/DocumentationSection';
+import DocumentationSection from './components/documentation/DocumentationSection';
 import QuoteUploadSection from './components/QuoteUploadSection';
 import ProjectSection from './components/ProjectSection';
 import AuthWrapper from './components/AuthWrapper';
