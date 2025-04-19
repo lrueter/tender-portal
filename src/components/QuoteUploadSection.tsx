@@ -8,7 +8,8 @@ import {
   Paper
 } from '@mui/material';
 import { Upload } from '@mui/icons-material';
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import { storage } from '../firebase/config';
+import { ref, uploadBytes } from 'firebase/storage';
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB in bytes
 
@@ -37,26 +38,16 @@ const QuoteUploadSection = () => {
     setMessage(null);
 
     try {
-      const arrayBuffer = await file.arrayBuffer();
-      const uint8Array = new Uint8Array(arrayBuffer);
-
-      const s3Client = new S3Client({
-        region: import.meta.env.VITE_AWS_REGION,
-        credentials: {
-          accessKeyId: import.meta.env.VITE_AWS_ACCESS_KEY_ID,
-          secretAccessKey: import.meta.env.VITE_AWS_SECRET_ACCESS_KEY,
-        }
-      });
-
       const fileName = `quotes/${Date.now()}-${file.name}`;
-      const command = new PutObjectCommand({
-        Bucket: import.meta.env.VITE_AWS_BUCKET_NAME,
-        Key: fileName,
-        Body: uint8Array,
-        ContentType: 'application/pdf'
+      const storageRef = ref(storage, fileName);
+      
+      // Convert file to array buffer
+      const arrayBuffer = await file.arrayBuffer();
+      
+      await uploadBytes(storageRef, arrayBuffer, {
+        contentType: 'application/pdf'
       });
-
-      await s3Client.send(command);
+      
       setMessage({ type: 'success', text: 'Quote uploaded successfully!' });
     } catch (error) {
       console.error('Error uploading file:', error);
