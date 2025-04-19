@@ -1,21 +1,18 @@
-import { Container, Paper, Typography } from '@mui/material';
+import { Container, Paper, Typography, Button, Stack, Alert } from '@mui/material';
 import { auth } from '../firebase/config';
 import { 
   GoogleAuthProvider, 
   GithubAuthProvider,
   TwitterAuthProvider,
   FacebookAuthProvider,
-  EmailAuthProvider,
   signInWithPopup
 } from 'firebase/auth';
 import { useState } from 'react';
-import { Button, Stack, Divider } from '@mui/material';
 import { 
   Google as GoogleIcon,
   GitHub as GitHubIcon,
   Twitter as TwitterIcon,
-  Facebook as FacebookIcon,
-  Email as EmailIcon 
+  Facebook as FacebookIcon
 } from '@mui/icons-material';
 
 const LoginPage = () => {
@@ -23,9 +20,11 @@ const LoginPage = () => {
 
   const handleSignIn = async (provider: any) => {
     try {
+      setError(null);
       await signInWithPopup(auth, provider);
     } catch (error: any) {
       setError(error.message);
+      console.error('Authentication error:', error);
     }
   };
 
@@ -44,6 +43,12 @@ const LoginPage = () => {
           Please sign in to continue
         </Typography>
         
+        {error && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {error}
+          </Alert>
+        )}
+
         <Stack spacing={2}>
           <Button
             variant="contained"
