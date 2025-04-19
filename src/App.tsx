@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Box, Container, Paper, Typography, ThemeProvider, useMediaQuery, useTheme } from '@mui/material';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from './firebase/config';
-import { theme } from './theme/theme';
 import { TabPanel } from './components/layout/TabPanel';
 import { AppHeader } from './components/layout/AppHeader';
 import { LoadingState } from './components/layout/LoadingState';
