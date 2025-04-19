@@ -1,15 +1,24 @@
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { auth } from '../firebase/config';
-import { Container, Paper, Typography, Button } from '@mui/material';
+import { Container, Paper, Typography, Button, Alert } from '@mui/material';
 import { Google as GoogleIcon } from '@mui/icons-material';
+import { useState } from 'react';
 
 const LoginPage = () => {
+  const [error, setError] = useState<string | null>(null);
+
   const signInWithGoogle = async () => {
+    setError(null);
     const provider = new GoogleAuthProvider();
     try {
       await signInWithPopup(auth, provider);
     } catch (error) {
       console.error('Error signing in with Google:', error);
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError('An error occurred during sign in');
+      }
     }
   };
 
@@ -27,6 +36,11 @@ const LoginPage = () => {
         <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
           Please sign in to continue
         </Typography>
+        {error && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {error}
+          </Alert>
+        )}
         <Button
           variant="contained"
           onClick={signInWithGoogle}
