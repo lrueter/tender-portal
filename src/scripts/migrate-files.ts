@@ -2,6 +2,7 @@ import { S3Client, ListObjectsV2Command, GetObjectCommand } from '@aws-sdk/clien
 import { initializeApp } from 'firebase/app';
 import { getStorage, ref, uploadBytes } from 'firebase/storage';
 import * as dotenv from 'dotenv';
+import { storage } from '../services/firebase';
 
 dotenv.config();
 
@@ -83,4 +84,20 @@ async function migrateFiles() {
   }
 }
 
-migrateFiles(); 
+migrateFiles();
+
+const uploadMarkdownExample = async () => {
+  const content = new Uint8Array([0x25, 0x50, 0x44, 0x46]); // PDF magic numbers
+  
+  try {
+    const markdownRef = ref(storage, 'markdown/markdown_example.md');
+    await uploadBytes(markdownRef, content, {
+      contentType: 'text/markdown'
+    });
+    console.log('Markdown file uploaded successfully');
+  } catch (error) {
+    console.error('Error uploading markdown:', error);
+  }
+};
+
+uploadMarkdownExample(); 
