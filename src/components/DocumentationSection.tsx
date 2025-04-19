@@ -11,9 +11,9 @@ import {
   Box 
 } from '@mui/material';
 import { Description as DocumentIcon } from '@mui/icons-material';
-import { fetchDocumentsFromFolder } from '../../services/storage';
-import { Document } from '../../types';
-import { styles } from './styles';
+import { fetchDocumentsFromFolder } from '../services/storage';
+import { Document } from '../types';
+import { styles } from './DocumentationSectionStyles';
 
 const DocumentationSection = () => {
   const [documents, setDocuments] = useState<Document[]>([]);
