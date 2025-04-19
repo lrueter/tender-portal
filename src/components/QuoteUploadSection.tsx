@@ -8,8 +8,6 @@ import {
   Paper
 } from '@mui/material';
 import { Upload } from '@mui/icons-material';
-import { storage } from '../firebase/config';
-import { ref, uploadBytes } from 'firebase/storage';
 import { useAuth } from '../hooks/useAuth';
 import { uploadFile } from '../services/storage';
 
@@ -46,7 +44,7 @@ const QuoteUploadSection = () => {
       setUploading(true);
       setMessage(null);
 
-      const url = await uploadFile(file, 'quotes', {
+      await uploadFile(file, 'quotes', {
         contentType: file.type
       });
       

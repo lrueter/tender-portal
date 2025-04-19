@@ -6,7 +6,7 @@ import ProjectSection from './components/ProjectSection';
 
 // Create a separate component for the authenticated content
 const AuthenticatedApp = () => {
-  const { user, signOut } = useAuth();
+  const { signOut } = useAuth();
 
   return (
     <Box sx={{ flexGrow: 1 }}>
