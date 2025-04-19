@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Alert, CircularProgress } from '@mui/material';
 import ReactMarkdown from 'react-markdown';
 import { storage } from '../firebase/config';
-import { ref, getBytes } from 'firebase/storage';
+import { ref, getDownloadURL } from 'firebase/storage';
 
 const ProjectSection = () => {
   const [markdownContent, setMarkdownContent] = useState<string>('');
@@ -12,16 +12,32 @@ const ProjectSection = () => {
   useEffect(() => {
     const fetchMarkdownContent = async () => {
       try {
+        console.log('Fetching markdown content...');
+        
         const markdownRef = ref(storage, 'markdown/markdown_example.md');
+        const url = await getDownloadURL(markdownRef);
         
-        // Get the bytes directly instead of using fetch
-        const bytes = await getBytes(markdownRef);
-        const content = new TextDecoder().decode(bytes);
-        
+        console.log('Got download URL:', url);
+
+        // Use the Firebase SDK's built-in token handling
+        const response = await fetch(url, {
+          method: 'GET',
+          headers: {
+            'Accept': 'text/plain',
+          },
+          mode: 'cors',
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const content = await response.text();
+        console.log('Content loaded successfully');
         setMarkdownContent(content);
         setError(null);
       } catch (error) {
-        console.error('Error fetching markdown content:', error);
+        console.error('Error details:', error);
         setError('Failed to load project description. Please make sure the file exists in Firebase Storage.');
       } finally {
         setLoading(false);

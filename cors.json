@@ -1,0 +1,8 @@
+[
+  {
+    "origin": ["https://tender-portal.vercel.app", "http://localhost:5173"],
+    "method": ["GET", "HEAD", "PUT", "POST", "DELETE"],
+    "maxAgeSeconds": 3600,
+    "responseHeader": ["Content-Type"]
+  }
+] 
