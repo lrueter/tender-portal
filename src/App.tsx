@@ -1,17 +1,12 @@
 import { Container, Paper, Typography, Box, AppBar, Toolbar, Button } from '@mui/material';
-import { useClerk } from '@clerk/clerk-react';
+import { useAuth } from './hooks/useAuth';
 import DocumentationSection from './components/DocumentationSection';
 import QuoteUploadSection from './components/QuoteUploadSection';
 import ProjectSection from './components/ProjectSection';
-import AuthWrapper from './components/AuthWrapper';
 
 // Create a separate component for the authenticated content
 const AuthenticatedApp = () => {
-  const { signOut } = useClerk();
-
-  const handleSignOut = () => {
-    signOut();
-  };
+  const { user, signOut } = useAuth();
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -20,7 +15,7 @@ const AuthenticatedApp = () => {
           <Typography variant="h6">
             Trade Tender Portal
           </Typography>
-          <Button color="inherit" onClick={handleSignOut}>
+          <Button color="inherit" onClick={signOut}>
             Logout
           </Button>
         </Toolbar>
@@ -54,13 +49,35 @@ const AuthenticatedApp = () => {
   );
 };
 
-// Main App component
+// Main App component with login screen
 function App() {
-  return (
-    <AuthWrapper>
-      <AuthenticatedApp />
-    </AuthWrapper>
-  );
+  const { user, signIn } = useAuth();
+
+  if (!user) {
+    return (
+      <Container sx={{ 
+        height: '100vh', 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'center' 
+      }}>
+        <Paper sx={{ p: 4, textAlign: 'center' }}>
+          <Typography variant="h5" gutterBottom>
+            Trade Tender Portal
+          </Typography>
+          <Button 
+            variant="contained" 
+            onClick={signIn}
+            startIcon={<img src="/google-icon.svg" alt="" width="18" height="18" />}
+          >
+            Sign in with Google
+          </Button>
+        </Paper>
+      </Container>
+    );
+  }
+
+  return <AuthenticatedApp />;
 }
 
 export default App; 

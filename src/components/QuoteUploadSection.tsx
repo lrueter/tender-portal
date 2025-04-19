@@ -10,6 +10,8 @@ import {
 import { Upload } from '@mui/icons-material';
 import { storage } from '../firebase/config';
 import { ref, uploadBytes } from 'firebase/storage';
+import { useAuth } from '../hooks/useAuth';
+import { uploadFile } from '../services/storage';
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB in bytes
 
@@ -17,41 +19,44 @@ const QuoteUploadSection = () => {
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
   const [dragActive, setDragActive] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const { user } = useAuth();
 
-  const handleFile = async (file: File) => {
-    // Validate file type
-    if (file.type !== 'application/pdf') {
-      setMessage({ type: 'error', text: 'Please upload a PDF file' });
-      return;
-    }
-
-    // Validate file size
-    if (file.size > MAX_FILE_SIZE) {
-      setMessage({ 
-        type: 'error', 
-        text: `File is too large. Maximum size is ${MAX_FILE_SIZE / 1024 / 1024}MB` 
-      });
-      return;
-    }
-
-    setUploading(true);
-    setMessage(null);
-
+  const handleUpload = async (file: File) => {
     try {
-      const fileName = `quotes/${Date.now()}-${file.name}`;
-      const storageRef = ref(storage, fileName);
-      
-      // Convert file to array buffer
-      const arrayBuffer = await file.arrayBuffer();
-      
-      await uploadBytes(storageRef, arrayBuffer, {
-        contentType: 'application/pdf'
+      if (!user) {
+        throw new Error('Please sign in to upload documents');
+      }
+
+      // Validate file type
+      if (file.type !== 'application/pdf') {
+        setMessage({ type: 'error', text: 'Please upload a PDF file' });
+        return;
+      }
+
+      // Validate file size
+      if (file.size > MAX_FILE_SIZE) {
+        setMessage({ 
+          type: 'error', 
+          text: `File is too large. Maximum size is ${MAX_FILE_SIZE / 1024 / 1024}MB` 
+        });
+        return;
+      }
+
+      setUploading(true);
+      setMessage(null);
+
+      const url = await uploadFile(file, 'quotes', {
+        contentType: file.type
       });
       
       setMessage({ type: 'success', text: 'Quote uploaded successfully!' });
     } catch (error) {
-      console.error('Error uploading file:', error);
-      setMessage({ type: 'error', text: 'Failed to upload quote. Please try again.' });
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError('An unexpected error occurred during upload');
+      }
     } finally {
       setUploading(false);
     }
@@ -74,14 +79,14 @@ const QuoteUploadSection = () => {
 
     const file = e.dataTransfer.files?.[0];
     if (file) {
-      handleFile(file);
+      handleUpload(file);
     }
   }, []);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      handleFile(file);
+      handleUpload(file);
     }
   };
 
@@ -148,6 +153,12 @@ const QuoteUploadSection = () => {
       {message && (
         <Alert severity={message.type} sx={{ mt: 2 }}>
           {message.text}
+        </Alert>
+      )}
+
+      {error && (
+        <Alert severity="error" sx={{ mt: 2 }}>
+          {error}
         </Alert>
       )}
     </Box>

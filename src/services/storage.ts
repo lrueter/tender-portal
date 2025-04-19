@@ -1,6 +1,7 @@
-import { storage } from './firebase';
+import { storage } from '../firebase/config';
 import { ref, listAll, getDownloadURL, uploadBytes } from 'firebase/storage';
 import { Document } from '../types';
+import { auth } from '../firebase/config';
 
 export const fetchDocumentsFromFolder = async (folderPath: string): Promise<Document[]> => {
   const folderRef = ref(storage, folderPath);
@@ -19,12 +20,19 @@ export const uploadFile = async (
   folderPath: string,
   options?: { contentType?: string }
 ): Promise<string> => {
+  if (!auth.currentUser) {
+    throw new Error('User must be authenticated to upload files');
+  }
+
   const fileName = `${folderPath}/${Date.now()}-${file.name}`;
   const fileRef = ref(storage, fileName);
   
   const arrayBuffer = await file.arrayBuffer();
   await uploadBytes(fileRef, arrayBuffer, {
-    contentType: options?.contentType || file.type
+    contentType: options?.contentType || file.type,
+    customMetadata: {
+      uploadedBy: auth.currentUser.uid
+    }
   });
   
   return await getDownloadURL(fileRef);
