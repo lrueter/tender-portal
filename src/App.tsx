@@ -11,7 +11,11 @@ import {
   Tab, 
   ThemeProvider, 
   createTheme,
-  CircularProgress 
+  CircularProgress,
+  Fade,
+  Grow,
+  useTheme,
+  alpha 
 } from '@mui/material';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from './firebase/config';
@@ -28,18 +32,29 @@ interface TabPanelProps {
 
 function TabPanel(props: TabPanelProps) {
   const { children, value, index, ...other } = props;
+  const theme = useTheme();
 
   return (
     <div
       role="tabpanel"
       hidden={value !== index}
       {...other}
+      style={{ 
+        transition: theme.transitions.create('opacity'),
+        position: 'relative'
+      }}
     >
-      {value === index && (
+      <Fade in={value === index} timeout={450}>
         <Box sx={{ p: 3 }}>
-          {children}
+          <Grow 
+            in={value === index} 
+            timeout={450}
+            style={{ transformOrigin: '0 0 0' }}
+          >
+            <div>{children}</div>
+          </Grow>
         </Box>
-      )}
+      </Fade>
     </div>
   );
 }
@@ -104,14 +119,16 @@ function App() {
           position="static" 
           sx={{ 
             boxShadow: 3,
-            background: 'linear-gradient(to right, #1976d2, #1565c0)'
+            background: 'linear-gradient(to right, #1976d2, #1565c0)',
+            transition: theme => theme.transitions.create(['background', 'box-shadow'])
           }}
         >
           <Toolbar 
             sx={{ 
               justifyContent: 'space-between',
               minHeight: '72px',
-              px: { xs: 2, sm: 4 }
+              px: { xs: 2, sm: 4 },
+              transition: theme => theme.transitions.create('min-height')
             }}
           >
             <Typography 
@@ -146,20 +163,29 @@ function App() {
               '& .MuiTabs-indicator': {
                 backgroundColor: '#fff',
                 height: 3,
+                transition: theme => theme.transitions.create(['width', 'left'], {
+                  duration: theme.transitions.duration.standard,
+                  easing: theme.transitions.easing.easeInOut,
+                }),
               },
               '& .MuiTab-root': {
-                color: 'rgba(255, 255, 255, 0.7)',
+                color: alpha('#fff', 0.7),
                 fontSize: { xs: '0.875rem', sm: '1rem' },
                 minHeight: '56px',
                 textTransform: 'none',
                 fontWeight: 500,
                 px: { xs: 2, sm: 4 },
+                transition: theme => theme.transitions.create(
+                  ['color', 'background-color', 'padding'],
+                  { duration: theme.transitions.duration.shorter }
+                ),
                 '&.Mui-selected': {
                   color: '#fff',
                 },
                 '&:hover': {
                   color: '#fff',
                   opacity: 1,
+                  backgroundColor: alpha('#fff', 0.1),
                 },
               },
               mb: 1
