@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { Container, Tabs, Tab, Box, AppBar } from '@mui/material';
+import { Tabs, Tab, Box, AppBar } from '@mui/material';
 import { Description, Assignment, Folder } from '@mui/icons-material';
 import DocumentationSection from './DocumentationSection';
 import QuoteSection from './QuoteSection';
-import ProjectContainer from './ProjectContainer'; // Your existing project container
+import ProjectsSection from './ProjectsSection';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -33,7 +33,7 @@ function TabPanel(props: TabPanelProps) {
 const MainLayout = () => {
   const [selectedTab, setSelectedTab] = useState(0);
 
-  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleTabChange = (_: React.SyntheticEvent, newValue: number) => {
     setSelectedTab(newValue);
   };
 
@@ -54,7 +54,7 @@ const MainLayout = () => {
       </AppBar>
 
       <TabPanel value={selectedTab} index={0}>
-        <ProjectContainer />
+        <ProjectsSection />
       </TabPanel>
       <TabPanel value={selectedTab} index={1}>
         <DocumentationSection />
