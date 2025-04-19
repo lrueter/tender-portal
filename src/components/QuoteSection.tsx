@@ -1,14 +1,14 @@
 import { Container, Typography } from '@mui/material';
 
-const DocumentationSection = () => {
+const QuoteSection = () => {
   return (
     <Container>
       <Typography variant="h5" gutterBottom>
-        Documentation
+        Quote Submission
       </Typography>
-      {/* Add your documentation content here */}
+      {/* Add your quote submission content here */}
     </Container>
   );
 };
 
-export default DocumentationSection; 
+export default QuoteSection; 
