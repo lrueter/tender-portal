@@ -1,104 +1,43 @@
+import { Container, Paper, Typography } from '@mui/material';
+import * as firebaseui from 'firebaseui';
+import 'firebaseui/dist/firebaseui.css';
+import { useEffect } from 'react';
+import { auth } from '../firebase/config';
 import { 
   GoogleAuthProvider, 
   GithubAuthProvider,
   TwitterAuthProvider,
-  FacebookAuthProvider, 
-  signInWithPopup,
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword
+  FacebookAuthProvider,
+  EmailAuthProvider 
 } from 'firebase/auth';
-import { auth } from '../firebase/config';
-import { 
-  Container, 
-  Paper, 
-  Typography, 
-  Button, 
-  Alert,
-  Stack,
-  Divider,
-  TextField
-} from '@mui/material';
-import { 
-  Google as GoogleIcon,
-  GitHub as GitHubIcon,
-  Twitter as TwitterIcon,
-  Facebook as FacebookIcon,
-  Email as EmailIcon 
-} from '@mui/icons-material';
-import { useState } from 'react';
 
 const LoginPage = () => {
-  const [error, setError] = useState<string | null>(null);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [isSignUp, setIsSignUp] = useState(false);
-
-  const signInWithGoogle = async () => {
-    setError(null);
-    const provider = new GoogleAuthProvider();
-    try {
-      await signInWithPopup(auth, provider);
-    } catch (error) {
-      handleAuthError(error);
-    }
-  };
-
-  const signInWithGithub = async () => {
-    setError(null);
-    const provider = new GithubAuthProvider();
-    try {
-      await signInWithPopup(auth, provider);
-    } catch (error) {
-      handleAuthError(error);
-    }
-  };
-
-  const signInWithTwitter = async () => {
-    setError(null);
-    const provider = new TwitterAuthProvider();
-    try {
-      await signInWithPopup(auth, provider);
-    } catch (error) {
-      handleAuthError(error);
-    }
-  };
-
-  const signInWithFacebook = async () => {
-    setError(null);
-    const provider = new FacebookAuthProvider();
-    try {
-      await signInWithPopup(auth, provider);
-    } catch (error) {
-      handleAuthError(error);
-    }
-  };
-
-  const handleEmailAuth = async () => {
-    setError(null);
-    if (!email || !password) {
-      setError('Please enter both email and password');
-      return;
-    }
+  useEffect(() => {
+    const ui = firebaseui.auth.AuthUI.getInstance() || new firebaseui.auth.AuthUI(auth);
     
-    try {
-      if (isSignUp) {
-        await createUserWithEmailAndPassword(auth, email, password);
-      } else {
-        await signInWithEmailAndPassword(auth, email, password);
-      }
-    } catch (error) {
-      handleAuthError(error);
-    }
-  };
+    const uiConfig: firebaseui.auth.Config = {
+      signInOptions: [
+        GoogleAuthProvider.PROVIDER_ID,
+        GithubAuthProvider.PROVIDER_ID,
+        TwitterAuthProvider.PROVIDER_ID,
+        FacebookAuthProvider.PROVIDER_ID,
+        {
+          provider: EmailAuthProvider.PROVIDER_ID,
+          requireDisplayName: true
+        }
+      ],
+      signInFlow: 'popup',
+      signInSuccessUrl: '/',
+      tosUrl: '/terms-of-service', // Add your terms of service URL
+      privacyPolicyUrl: '/privacy-policy' // Add your privacy policy URL
+    };
 
-  const handleAuthError = (error: any) => {
-    console.error('Authentication error:', error);
-    if (error instanceof Error) {
-      setError(error.message);
-    } else {
-      setError('An error occurred during authentication');
-    }
-  };
+    ui.start('#firebaseui-auth-container', uiConfig);
+
+    return () => {
+      ui.delete();
+    };
+  }, []);
 
   return (
     <Container sx={{ 
@@ -114,86 +53,7 @@ const LoginPage = () => {
         <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
           Please sign in to continue
         </Typography>
-        {error && (
-          <Alert severity="error" sx={{ mb: 2 }}>
-            {error}
-          </Alert>
-        )}
-        
-        <Stack spacing={2}>
-          {/* Email/Password Auth */}
-          <TextField
-            label="Email"
-            type="email"
-            fullWidth
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <TextField
-            label="Password"
-            type="password"
-            fullWidth
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <Button
-            variant="contained"
-            onClick={handleEmailAuth}
-            startIcon={<EmailIcon />}
-            fullWidth
-          >
-            {isSignUp ? 'Sign Up' : 'Sign In'} with Email
-          </Button>
-          <Button
-            variant="text"
-            onClick={() => setIsSignUp(!isSignUp)}
-            size="small"
-          >
-            {isSignUp ? 'Already have an account? Sign In' : 'Need an account? Sign Up'}
-          </Button>
-
-          <Divider>or</Divider>
-
-          {/* OAuth Providers */}
-          <Button
-            variant="contained"
-            onClick={signInWithGoogle}
-            startIcon={<GoogleIcon />}
-            fullWidth
-          >
-            Sign in with Google
-          </Button>
-          
-          <Button
-            variant="contained"
-            onClick={signInWithGithub}
-            startIcon={<GitHubIcon />}
-            fullWidth
-            sx={{ bgcolor: '#24292e', '&:hover': { bgcolor: '#2f363d' } }}
-          >
-            Sign in with GitHub
-          </Button>
-
-          <Button
-            variant="contained"
-            onClick={signInWithTwitter}
-            startIcon={<TwitterIcon />}
-            fullWidth
-            sx={{ bgcolor: '#1DA1F2', '&:hover': { bgcolor: '#1a8cd8' } }}
-          >
-            Sign in with Twitter
-          </Button>
-
-          <Button
-            variant="contained"
-            onClick={signInWithFacebook}
-            startIcon={<FacebookIcon />}
-            fullWidth
-            sx={{ bgcolor: '#4267B2', '&:hover': { bgcolor: '#365899' } }}
-          >
-            Sign in with Facebook
-          </Button>
-        </Stack>
+        <div id="firebaseui-auth-container" />
       </Paper>
     </Container>
   );
