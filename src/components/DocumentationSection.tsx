@@ -61,7 +61,7 @@ const DocumentationSection = () => {
               disableGutters
               sx={styles.listItem}
             >
-              <ListItemIcon sx={{ minWidth: '40px' }}>
+              <ListItemIcon sx={{ minWidth: '32px' }}>
                 <DocumentIcon color="primary" />
               </ListItemIcon>
               <ListItemText 

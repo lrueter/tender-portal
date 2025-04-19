@@ -18,7 +18,7 @@ export const styles = {
   list: {
     width: '100%',
     padding: 0,
-    paddingLeft: '16px'
+    paddingLeft: 0
   },
   listItem: {
     '&:hover': {
