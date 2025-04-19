@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { storage } from '../firebase/config';
 import { ref, listAll, getDownloadURL } from 'firebase/storage';
-import { CircularProgress, Alert } from '@mui/material';
+import { CircularProgress, Alert, Typography } from '@mui/material';
 
 const DocumentationSection = () => {
   const [documents, setDocuments] = useState<Array<{ name: string; url: string }>>([]);
@@ -59,9 +59,11 @@ const DocumentationSection = () => {
 
   return (
     <div>
-      <h2>Documentation</h2>
+      <Typography variant="h4" component="h2" gutterBottom>
+        Documentation
+      </Typography>
       {documents.length === 0 ? (
-        <p>No documents found in the documents folder</p>
+        <Typography>No documents found in the documentation folder</Typography>
       ) : (
         <ul>
           {documents.map((doc) => (
