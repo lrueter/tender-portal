@@ -49,7 +49,7 @@ const DocumentationSection = () => {
           </Typography>
         </Paper>
       ) : (
-        <List sx={styles.list}>
+        <List sx={styles.list} disablePadding>
           {documents.map((doc) => (
             <ListItem
               key={doc.name}
@@ -58,9 +58,10 @@ const DocumentationSection = () => {
               target="_blank"
               rel="noopener noreferrer"
               button
+              disableGutters
               sx={styles.listItem}
             >
-              <ListItemIcon>
+              <ListItemIcon sx={{ minWidth: '40px' }}>
                 <DocumentIcon color="primary" />
               </ListItemIcon>
               <ListItemText 
