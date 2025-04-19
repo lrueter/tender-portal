@@ -1,7 +1,5 @@
 import { Container, Paper, Typography } from '@mui/material';
-import * as firebaseui from 'firebaseui';
-import 'firebaseui/dist/firebaseui.css';
-import { useEffect } from 'react';
+import { StyledFirebaseAuth } from 'react-firebaseui';
 import { auth } from '../firebase/config';
 import { 
   GoogleAuthProvider, 
@@ -12,32 +10,23 @@ import {
 } from 'firebase/auth';
 
 const LoginPage = () => {
-  useEffect(() => {
-    const ui = firebaseui.auth.AuthUI.getInstance() || new firebaseui.auth.AuthUI(auth);
-    
-    const uiConfig: firebaseui.auth.Config = {
-      signInOptions: [
-        GoogleAuthProvider.PROVIDER_ID,
-        GithubAuthProvider.PROVIDER_ID,
-        TwitterAuthProvider.PROVIDER_ID,
-        FacebookAuthProvider.PROVIDER_ID,
-        {
-          provider: EmailAuthProvider.PROVIDER_ID,
-          requireDisplayName: true
-        }
-      ],
-      signInFlow: 'popup',
-      signInSuccessUrl: '/',
-      tosUrl: '/terms-of-service', // Add your terms of service URL
-      privacyPolicyUrl: '/privacy-policy' // Add your privacy policy URL
-    };
-
-    ui.start('#firebaseui-auth-container', uiConfig);
-
-    return () => {
-      ui.delete();
-    };
-  }, []);
+  // Configure FirebaseUI.
+  const uiConfig = {
+    signInOptions: [
+      GoogleAuthProvider.PROVIDER_ID,
+      GithubAuthProvider.PROVIDER_ID,
+      TwitterAuthProvider.PROVIDER_ID,
+      FacebookAuthProvider.PROVIDER_ID,
+      {
+        provider: EmailAuthProvider.PROVIDER_ID,
+        requireDisplayName: true
+      }
+    ],
+    signInFlow: 'popup',
+    callbacks: {
+      signInSuccessWithAuthResult: () => false // Don't redirect after sign in
+    }
+  };
 
   return (
     <Container sx={{ 
@@ -53,7 +42,7 @@ const LoginPage = () => {
         <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
           Please sign in to continue
         </Typography>
-        <div id="firebaseui-auth-container" />
+        <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={auth} />
       </Paper>
     </Container>
   );
