@@ -1,13 +1,14 @@
 import { Container, Paper, Typography, Box, AppBar, Toolbar, Button } from '@mui/material';
-import { useAuth } from './hooks/useAuth';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth } from './firebase/config';
 import DocumentationSection from './components/DocumentationSection';
 import QuoteUploadSection from './components/QuoteUploadSection';
 import ProjectSection from './components/ProjectSection';
+import LoginPage from './components/LoginPage';
+import { CircularProgress } from '@mui/material';
 
 // Create a separate component for the authenticated content
 const AuthenticatedApp = () => {
-  const { signOut } = useAuth();
-
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static" sx={{ mb: 3 }}>
@@ -15,7 +16,7 @@ const AuthenticatedApp = () => {
           <Typography variant="h6">
             Trade Tender Portal
           </Typography>
-          <Button color="inherit" onClick={signOut}>
+          <Button color="inherit" onClick={() => auth.signOut()}>
             Logout
           </Button>
         </Toolbar>
@@ -51,9 +52,9 @@ const AuthenticatedApp = () => {
 
 // Main App component with login screen
 function App() {
-  const { user, signIn } = useAuth();
+  const [user, loading, error] = useAuthState(auth);
 
-  if (!user) {
+  if (loading) {
     return (
       <Container sx={{ 
         height: '100vh', 
@@ -61,20 +62,28 @@ function App() {
         alignItems: 'center', 
         justifyContent: 'center' 
       }}>
-        <Paper sx={{ p: 4, textAlign: 'center' }}>
-          <Typography variant="h5" gutterBottom>
-            Trade Tender Portal
-          </Typography>
-          <Button 
-            variant="contained" 
-            onClick={signIn}
-            startIcon={<img src="/google-icon.svg" alt="" width="18" height="18" />}
-          >
-            Sign in with Google
-          </Button>
-        </Paper>
+        <CircularProgress />
       </Container>
     );
+  }
+
+  if (error) {
+    return (
+      <Container sx={{ 
+        height: '100vh', 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'center' 
+      }}>
+        <Typography color="error">
+          Error: {error.message}
+        </Typography>
+      </Container>
+    );
+  }
+
+  if (!user) {
+    return <LoginPage />;
   }
 
   return <AuthenticatedApp />;
