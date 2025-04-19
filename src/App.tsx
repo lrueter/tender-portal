@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Box, Container, Paper, Typography, ThemeProvider } from '@mui/material';
+import { Box, Container, Paper, Typography, ThemeProvider, useMediaQuery, useTheme } from '@mui/material';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from './firebase/config';
 import { theme } from './theme/theme';
@@ -15,6 +15,8 @@ import LoginPage from './components/LoginPage';
 function App() {
   const [user, loading, error] = useAuthState(auth);
   const [tabValue, setTabValue] = useState(0);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const handleTabChange = (_: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
@@ -30,7 +32,12 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Box sx={{ width: '100%', minHeight: '100vh', bgcolor: 'background.default' }}>
+      <Box sx={{ 
+        width: '100%', 
+        minHeight: '100vh', 
+        bgcolor: 'background.default',
+        pb: isMobile ? '56px' : 0 // Add padding for bottom navigation on mobile
+      }}>
         <AppHeader tabValue={tabValue} onTabChange={handleTabChange} />
 
         <TabPanel value={tabValue} index={0}>
