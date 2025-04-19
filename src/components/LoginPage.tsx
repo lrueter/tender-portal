@@ -1,7 +1,6 @@
 import { 
   GoogleAuthProvider, 
   GithubAuthProvider, 
-  EmailAuthProvider,
   signInWithPopup,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword
