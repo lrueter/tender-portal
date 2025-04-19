@@ -53,7 +53,7 @@ function App() {
           </Container>
         </TabPanel>
 
-        <TabPanel value={tabValue} index={1}>
+        <TabPanel value={tabValue} index={2}>
           <Container maxWidth="lg">
             <Box sx={{ py: 4 }}>
               <Paper sx={{ p: 3 }}>
@@ -66,7 +66,7 @@ function App() {
           </Container>
         </TabPanel>
 
-        <TabPanel value={tabValue} index={2}>
+        <TabPanel value={tabValue} index={1}>
           <Container maxWidth="lg">
             <Box sx={{ py: 4 }}>
               <Paper sx={{ p: 3 }}>
