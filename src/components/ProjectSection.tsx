@@ -12,14 +12,9 @@ const ProjectSection = () => {
   useEffect(() => {
     const fetchMarkdownContent = async () => {
       try {
-        console.log('Fetching markdown content...');
-        
         const markdownRef = ref(storage, 'markdown/markdown_example.md');
         const url = await getDownloadURL(markdownRef);
-        
-        console.log('Got download URL:', url);
 
-        // Use the Firebase SDK's built-in token handling
         const response = await fetch(url, {
           method: 'GET',
           headers: {
@@ -33,11 +28,9 @@ const ProjectSection = () => {
         }
 
         const content = await response.text();
-        console.log('Content loaded successfully');
         setMarkdownContent(content);
         setError(null);
       } catch (error) {
-        console.error('Error details:', error);
         setError('Failed to load project description. Please make sure the file exists in Firebase Storage.');
       } finally {
         setLoading(false);
