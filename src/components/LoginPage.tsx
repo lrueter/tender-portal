@@ -1,24 +1,18 @@
-import { StyledFirebaseAuth } from 'react-firebaseui';
-import { GoogleAuthProvider } from 'firebase/auth';
+import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { auth } from '../firebase/config';
-import { Container, Paper, Typography } from '@mui/material';
-
-// Configure FirebaseUI
-const uiConfig = {
-  signInOptions: [
-    GoogleAuthProvider.PROVIDER_ID,
-    // You can add more providers here:
-    // EmailAuthProvider.PROVIDER_ID,
-    // PhoneAuthProvider.PROVIDER_ID,
-    // GithubAuthProvider.PROVIDER_ID,
-  ],
-  signInFlow: 'popup', // Or 'redirect'
-  callbacks: {
-    signInSuccessWithAuthResult: () => false, // Don't redirect after sign in
-  },
-};
+import { Container, Paper, Typography, Button } from '@mui/material';
+import { Google as GoogleIcon } from '@mui/icons-material';
 
 const LoginPage = () => {
+  const signInWithGoogle = async () => {
+    const provider = new GoogleAuthProvider();
+    try {
+      await signInWithPopup(auth, provider);
+    } catch (error) {
+      console.error('Error signing in with Google:', error);
+    }
+  };
+
   return (
     <Container sx={{ 
       height: '100vh', 
@@ -33,7 +27,14 @@ const LoginPage = () => {
         <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
           Please sign in to continue
         </Typography>
-        <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={auth} />
+        <Button
+          variant="contained"
+          onClick={signInWithGoogle}
+          startIcon={<GoogleIcon />}
+          fullWidth
+        >
+          Sign in with Google
+        </Button>
       </Paper>
     </Container>
   );
