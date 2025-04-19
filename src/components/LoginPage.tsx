@@ -1,6 +1,8 @@
 import { 
   GoogleAuthProvider, 
-  GithubAuthProvider, 
+  GithubAuthProvider,
+  TwitterAuthProvider,
+  FacebookAuthProvider, 
   signInWithPopup,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword
@@ -19,6 +21,8 @@ import {
 import { 
   Google as GoogleIcon,
   GitHub as GitHubIcon,
+  Twitter as TwitterIcon,
+  Facebook as FacebookIcon,
   Email as EmailIcon 
 } from '@mui/icons-material';
 import { useState } from 'react';
@@ -42,6 +46,26 @@ const LoginPage = () => {
   const signInWithGithub = async () => {
     setError(null);
     const provider = new GithubAuthProvider();
+    try {
+      await signInWithPopup(auth, provider);
+    } catch (error) {
+      handleAuthError(error);
+    }
+  };
+
+  const signInWithTwitter = async () => {
+    setError(null);
+    const provider = new TwitterAuthProvider();
+    try {
+      await signInWithPopup(auth, provider);
+    } catch (error) {
+      handleAuthError(error);
+    }
+  };
+
+  const signInWithFacebook = async () => {
+    setError(null);
+    const provider = new FacebookAuthProvider();
     try {
       await signInWithPopup(auth, provider);
     } catch (error) {
@@ -148,6 +172,26 @@ const LoginPage = () => {
             sx={{ bgcolor: '#24292e', '&:hover': { bgcolor: '#2f363d' } }}
           >
             Sign in with GitHub
+          </Button>
+
+          <Button
+            variant="contained"
+            onClick={signInWithTwitter}
+            startIcon={<TwitterIcon />}
+            fullWidth
+            sx={{ bgcolor: '#1DA1F2', '&:hover': { bgcolor: '#1a8cd8' } }}
+          >
+            Sign in with Twitter
+          </Button>
+
+          <Button
+            variant="contained"
+            onClick={signInWithFacebook}
+            startIcon={<FacebookIcon />}
+            fullWidth
+            sx={{ bgcolor: '#4267B2', '&:hover': { bgcolor: '#365899' } }}
+          >
+            Sign in with Facebook
           </Button>
         </Stack>
       </Paper>
