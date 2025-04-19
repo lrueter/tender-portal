@@ -35,7 +35,7 @@ function App() {
         width: '100%', 
         minHeight: '100vh', 
         bgcolor: 'background.default',
-        pb: isMobile ? '56px' : 0 // Add padding for bottom navigation on mobile
+        pb: isMobile ? '72px' : 0 // Updated padding to match new navigation bar height
       }}>
         <AppHeader tabValue={tabValue} onTabChange={handleTabChange} />
 

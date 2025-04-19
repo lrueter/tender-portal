@@ -138,11 +138,20 @@ export function AppHeader({ tabValue, onTabChange }: AppHeaderProps) {
             zIndex: theme.zIndex.appBar,
             boxShadow: 3,
             backgroundColor: theme.palette.primary.main,
+            height: '72px',
             '& .MuiBottomNavigationAction-root': {
               color: alpha('#fff', 0.7),
+              minWidth: '80px',
+              padding: '8px 0',
               '&.Mui-selected': {
                 color: '#fff',
               },
+              '& .MuiBottomNavigationAction-label': {
+                fontSize: '0.875rem',
+                '&.Mui-selected': {
+                  fontSize: '0.875rem',
+                }
+              }
             },
           }}
         >
