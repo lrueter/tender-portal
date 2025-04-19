@@ -1,60 +1,31 @@
 import { useState, useEffect } from 'react';
-import { 
-  List, 
-  ListItem, 
-  ListItemIcon, 
-  ListItemText, 
-  Link,
-  Alert,
-  Typography 
-} from '@mui/material';
-import { PictureAsPdf } from '@mui/icons-material';
-import { S3Client, ListObjectsV2Command } from '@aws-sdk/client-s3';
-
-interface Document {
-  key: string;
-  url: string;
-}
+import { storage } from '../firebase/config';
+import { ref, listAll, getDownloadURL, uploadBytes } from 'firebase/storage';
+import { CircularProgress, Alert } from '@mui/material';
 
 const DocumentationSection = () => {
-  const [documents, setDocuments] = useState<Document[]>([]);
-  const [error, setError] = useState<string | null>(null);
+  const [documents, setDocuments] = useState<Array<{ name: string; url: string }>>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchDocuments = async () => {
       try {
-        const s3Client = new S3Client({
-          region: import.meta.env.VITE_AWS_REGION,
-          credentials: {
-            accessKeyId: import.meta.env.VITE_AWS_ACCESS_KEY_ID,
-            secretAccessKey: import.meta.env.VITE_AWS_SECRET_ACCESS_KEY,
-          }
-        });
-
-        const command = new ListObjectsV2Command({
-          Bucket: import.meta.env.VITE_AWS_BUCKET_NAME,
-          Prefix: 'documentation/'
-        });
-
-        const response = await s3Client.send(command);
+        const documentsRef = ref(storage, 'documents');
+        const result = await listAll(documentsRef);
         
-        if (response.Contents && response.Contents.length > 0) {
-          // Filter out the directory itself and create document objects
-          const docs = response.Contents
-            .filter(item => item.Key !== 'documentation/') // Filter out the directory
-            .map(item => ({
-              key: item.Key!,
-              url: `https://${import.meta.env.VITE_AWS_BUCKET_NAME}.s3.${import.meta.env.VITE_AWS_REGION}.amazonaws.com/${item.Key}`
-            }));
-          setDocuments(docs);
-        } else {
-          setDocuments([]); // Ensure empty array when no documents found
-        }
+        const docs = await Promise.all(
+          result.items.map(async (item) => ({
+            name: item.name,
+            url: await getDownloadURL(item)
+          }))
+        );
+        
+        setDocuments(docs);
         setError(null);
-      } catch (error) {
-        console.error('Error fetching documents:', error);
-        setError('Failed to load documents. Please try again later.');
+      } catch (err) {
+        console.error('Error fetching documents:', err);
+        setError('Failed to load documents');
       } finally {
         setLoading(false);
       }
@@ -63,33 +34,45 @@ const DocumentationSection = () => {
     fetchDocuments();
   }, []);
 
+  const handleFileUpload = async (file: File) => {
+    try {
+      const storageRef = ref(storage, `documents/${file.name}`);
+      await uploadBytes(storageRef, file);
+      const url = await getDownloadURL(storageRef);
+      
+      setDocuments(prev => [...prev, { name: file.name, url }]);
+      setError(null);
+    } catch (err) {
+      console.error('Error uploading file:', err);
+      setError('Failed to upload file');
+    }
+  };
+
   if (loading) {
-    return <Typography>Loading documents...</Typography>;
+    return <CircularProgress />;
   }
 
   if (error) {
     return <Alert severity="error">{error}</Alert>;
   }
 
-  if (documents.length === 0) {
-    return <Typography>No documents available.</Typography>;
-  }
-
   return (
-    <List>
-      {documents.map((doc) => (
-        <ListItem key={doc.key}>
-          <ListItemIcon>
-            <PictureAsPdf />
-          </ListItemIcon>
-          <ListItemText>
-            <Link href={doc.url} target="_blank" rel="noopener noreferrer">
-              {doc.key.split('/').pop()}
-            </Link>
-          </ListItemText>
-        </ListItem>
-      ))}
-    </List>
+    <div>
+      <h2>Documentation</h2>
+      {documents.length === 0 ? (
+        <p>No documents found</p>
+      ) : (
+        <ul>
+          {documents.map((doc) => (
+            <li key={doc.name}>
+              <a href={doc.url} target="_blank" rel="noopener noreferrer">
+                {doc.name}
+              </a>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
   );
 };
 
