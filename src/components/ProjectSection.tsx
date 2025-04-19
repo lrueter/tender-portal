@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Alert, CircularProgress } from '@mui/material';
 import ReactMarkdown from 'react-markdown';
 import { storage } from '../firebase/config';
-import { ref, getDownloadURL, getBytes } from 'firebase/storage';
+import { ref, getBytes } from 'firebase/storage';
 
 const ProjectSection = () => {
   const [markdownContent, setMarkdownContent] = useState<string>('');

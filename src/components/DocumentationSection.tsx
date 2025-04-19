@@ -34,20 +34,6 @@ const DocumentationSection = () => {
     fetchDocuments();
   }, []);
 
-  const handleFileUpload = async (file: File) => {
-    try {
-      const storageRef = ref(storage, `documents/${file.name}`);
-      await uploadBytes(storageRef, file);
-      const url = await getDownloadURL(storageRef);
-      
-      setDocuments(prev => [...prev, { name: file.name, url }]);
-      setError(null);
-    } catch (err) {
-      console.error('Error uploading file:', err);
-      setError('Failed to upload file');
-    }
-  };
-
   if (loading) {
     return <CircularProgress />;
   }

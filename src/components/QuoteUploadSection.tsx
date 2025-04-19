@@ -37,7 +37,8 @@ const QuoteUploadSection = () => {
     setMessage(null);
 
     try {
-      const fileBuffer = await file.arrayBuffer();
+      const arrayBuffer = await file.arrayBuffer();
+      const uint8Array = new Uint8Array(arrayBuffer);
 
       const s3Client = new S3Client({
         region: import.meta.env.VITE_AWS_REGION,
@@ -51,7 +52,7 @@ const QuoteUploadSection = () => {
       const command = new PutObjectCommand({
         Bucket: import.meta.env.VITE_AWS_BUCKET_NAME,
         Key: fileName,
-        Body: fileBuffer,
+        Body: uint8Array,
         ContentType: 'application/pdf'
       });
 
