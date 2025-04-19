@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { storage } from '../firebase/config';
-import { ref, listAll, getDownloadURL, uploadBytes } from 'firebase/storage';
+import { ref, listAll, getDownloadURL } from 'firebase/storage';
 import { CircularProgress, Alert } from '@mui/material';
 
 const DocumentationSection = () => {
