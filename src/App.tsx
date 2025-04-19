@@ -9,6 +9,7 @@ import { LoadingState } from './components/layout/LoadingState';
 import DocumentationSection from './components/DocumentationSection';
 import QuoteUploadSection from './components/QuoteUploadSection';
 import ProjectSection from './components/ProjectSection';
+import PictureGallerySection from './components/PictureGallerySection';
 import LoginPage from './components/LoginPage';
 
 function App() {
@@ -60,6 +61,19 @@ function App() {
                   Quote Submission
                 </Typography>
                 <QuoteUploadSection />
+              </Paper>
+            </Box>
+          </Container>
+        </TabPanel>
+
+        <TabPanel value={tabValue} index={2}>
+          <Container maxWidth="lg">
+            <Box sx={{ py: 4 }}>
+              <Paper sx={{ p: 3 }}>
+                <Typography variant="h5" component="h2" gutterBottom>
+                  Picture Gallery
+                </Typography>
+                <PictureGallerySection />
               </Paper>
             </Box>
           </Container>

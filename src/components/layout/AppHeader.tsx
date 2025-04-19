@@ -103,6 +103,11 @@ export function AppHeader({ tabValue, onTabChange }: AppHeaderProps) {
           icon={<Box sx={{ width: 4, height: 4, borderRadius: '50%', bgcolor: 'secondary.main', mb: 0.5 }} />}
           iconPosition="start"
         />
+        <Tab 
+          label="Picture Gallery" 
+          icon={<Box sx={{ width: 4, height: 4, borderRadius: '50%', bgcolor: 'secondary.main', mb: 0.5 }} />}
+          iconPosition="start"
+        />
       </Tabs>
     </AppBar>
   );
