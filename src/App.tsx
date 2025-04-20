@@ -10,6 +10,7 @@ import QuoteUploadSection from './components/QuoteUploadSection';
 import ProjectSection from './components/ProjectSection';
 import PictureGallerySection from './components/PictureGallerySection';
 import LoginPage from './components/LoginPage';
+import UploadSection from './components/UploadSection';
 
 function App() {
   const [user, loading, error] = useAuthState(auth);
@@ -59,19 +60,6 @@ function App() {
           </Container>
         </TabPanel>
 
-        <TabPanel value={tabValue} index={2}>
-          <Container maxWidth="lg">
-            <Box sx={{ py: 4 }}>
-              <Paper sx={{ p: 3 }}>
-                <Typography variant="h5" component="h2" gutterBottom>
-                  Quote Submission
-                </Typography>
-                <QuoteUploadSection />
-              </Paper>
-            </Box>
-          </Container>
-        </TabPanel>
-
         <TabPanel value={tabValue} index={1}>
           <Container maxWidth="lg">
             <Box sx={{ py: 4 }}>
@@ -80,6 +68,32 @@ function App() {
                   Picture Gallery
                 </Typography>
                 <PictureGallerySection />
+              </Paper>
+            </Box>
+          </Container>
+        </TabPanel>
+
+        <TabPanel value={tabValue} index={2}>
+          <Container maxWidth="lg">
+            <Box sx={{ py: 4 }}>
+              <Paper sx={{ p: 3 }}>
+                <Typography variant="h5" component="h2" gutterBottom>
+                  Upload Files
+                </Typography>
+                <UploadSection />
+              </Paper>
+            </Box>
+          </Container>
+        </TabPanel>
+
+        <TabPanel value={tabValue} index={3}>
+          <Container maxWidth="lg">
+            <Box sx={{ py: 4 }}>
+              <Paper sx={{ p: 3 }}>
+                <Typography variant="h5" component="h2" gutterBottom>
+                  Quote Submission
+                </Typography>
+                <QuoteUploadSection />
               </Paper>
             </Box>
           </Container>
