@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Alert, CircularProgress } from '@mui/material';
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { storage } from '../firebase/config';
 import { ref, getDownloadURL } from 'firebase/storage';
 
@@ -54,7 +55,7 @@ const ProjectSection = () => {
 
   return (
     <div className="markdown-content">
-      <ReactMarkdown>{markdownContent}</ReactMarkdown>
+      <ReactMarkdown remarkPlugins={[remarkGfm]}>{markdownContent}</ReactMarkdown>
     </div>
   );
 };
