@@ -27,9 +27,6 @@ const UploadSection = () => {
         throw new Error('Please sign in to upload files');
       }
 
-      console.log('File type:', file.type);
-      console.log('File name:', file.name);
-
       // Validate file size
       if (file.size > MAX_FILE_SIZE) {
         setMessage({ 
@@ -48,7 +45,6 @@ const UploadSection = () => {
       } else {
         // Try to determine file type from extension if MIME type is not available
         const extension = file.name.split('.').pop()?.toLowerCase();
-        console.log('File extension:', extension);
         
         if (extension === 'pdf') {
           folderPath = 'documentation';
@@ -72,7 +68,6 @@ const UploadSection = () => {
         text: `File uploaded successfully to ${folderPath} folder!` 
       });
     } catch (error) {
-      console.error('Upload error:', error);
       if (error instanceof Error) {
         setError(error.message);
       } else {
