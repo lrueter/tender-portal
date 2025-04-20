@@ -14,7 +14,11 @@ import { uploadFile } from '../services/storage';
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB in bytes
 
-const UploadSection = () => {
+interface UploadSectionProps {
+  onUploadSuccess?: () => void;
+}
+
+const UploadSection = ({ onUploadSuccess }: UploadSectionProps) => {
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
   const [dragActive, setDragActive] = useState(false);
@@ -67,6 +71,11 @@ const UploadSection = () => {
         type: 'success', 
         text: `File uploaded successfully to ${folderPath} folder!` 
       });
+
+      // Notify parent component about successful upload
+      if (onUploadSuccess) {
+        onUploadSuccess();
+      }
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message);

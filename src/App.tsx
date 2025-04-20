@@ -15,11 +15,16 @@ import UploadSection from './components/UploadSection';
 function App() {
   const [user, loading, error] = useAuthState(auth);
   const [tabValue, setTabValue] = useState(0);
+  const [refreshKey, setRefreshKey] = useState(0);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const handleTabChange = (_: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
+  };
+
+  const handleUploadSuccess = () => {
+    setRefreshKey(prev => prev + 1);
   };
 
   if (loading || error) {
@@ -54,7 +59,7 @@ function App() {
                 <Typography variant="h5" component="h2" gutterBottom>
                   Documentation
                 </Typography>
-                <DocumentationSection />
+                <DocumentationSection key={`docs-${refreshKey}`} />
               </Paper>
             </Box>
           </Container>
@@ -67,7 +72,7 @@ function App() {
                 <Typography variant="h5" component="h2" gutterBottom>
                   Picture Gallery
                 </Typography>
-                <PictureGallerySection />
+                <PictureGallerySection key={`pics-${refreshKey}`} />
               </Paper>
             </Box>
           </Container>
@@ -80,7 +85,7 @@ function App() {
                 <Typography variant="h5" component="h2" gutterBottom>
                   Upload Files
                 </Typography>
-                <UploadSection />
+                <UploadSection onUploadSuccess={handleUploadSuccess} />
               </Paper>
             </Box>
           </Container>
