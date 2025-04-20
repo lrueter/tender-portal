@@ -50,7 +50,7 @@ function App() {
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4, py: 4 }}>
               <Paper sx={{ p: 3 }}>
                 <Typography variant="h5" component="h2" gutterBottom>
-                  Project
+                  General
                 </Typography>
                 <ProjectSection />
               </Paper>
