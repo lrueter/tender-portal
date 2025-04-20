@@ -5,9 +5,7 @@ import {
   Typography, 
   CircularProgress,
   Alert,
-  Paper,
-  Tabs,
-  Tab
+  Paper
 } from '@mui/material';
 import { Upload } from '@mui/icons-material';
 import { useAuthState } from 'react-firebase-hooks/auth';
@@ -22,17 +20,15 @@ const UploadSection = () => {
   const [dragActive, setDragActive] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [user] = useAuthState(auth);
-  const [tabValue, setTabValue] = useState(0);
-
-  const handleTabChange = (_: React.SyntheticEvent, newValue: number) => {
-    setTabValue(newValue);
-  };
 
   const handleUpload = async (file: File) => {
     try {
       if (!user) {
         throw new Error('Please sign in to upload files');
       }
+
+      console.log('File type:', file.type);
+      console.log('File name:', file.name);
 
       // Validate file size
       if (file.size > MAX_FILE_SIZE) {
@@ -43,26 +39,40 @@ const UploadSection = () => {
         return;
       }
 
-      // Validate file type based on selected tab
-      if (tabValue === 0 && file.type !== 'application/pdf') {
-        setMessage({ type: 'error', text: 'Please upload a PDF file' });
-        return;
-      }
-      if (tabValue === 1 && !file.type.startsWith('image/')) {
-        setMessage({ type: 'error', text: 'Please upload an image file' });
-        return;
+      // Validate file type and determine folder
+      let folderPath: string;
+      if (file.type === 'application/pdf') {
+        folderPath = 'documentation';
+      } else if (file.type.startsWith('image/')) {
+        folderPath = 'pictures';
+      } else {
+        // Try to determine file type from extension if MIME type is not available
+        const extension = file.name.split('.').pop()?.toLowerCase();
+        console.log('File extension:', extension);
+        
+        if (extension === 'pdf') {
+          folderPath = 'documentation';
+        } else if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(extension || '')) {
+          folderPath = 'pictures';
+        } else {
+          setMessage({ type: 'error', text: 'Please upload a PDF or image file' });
+          return;
+        }
       }
 
       setUploading(true);
       setMessage(null);
 
-      const folderPath = tabValue === 0 ? 'documentation' : 'pictures';
       await uploadFile(file, folderPath, {
         contentType: file.type
       });
       
-      setMessage({ type: 'success', text: 'File uploaded successfully!' });
+      setMessage({ 
+        type: 'success', 
+        text: `File uploaded successfully to ${folderPath} folder!` 
+      });
     } catch (error) {
+      console.error('Upload error:', error);
       if (error instanceof Error) {
         setError(error.message);
       } else {
@@ -103,21 +113,8 @@ const UploadSection = () => {
 
   return (
     <Box>
-      <Tabs 
-        value={tabValue} 
-        onChange={handleTabChange}
-        centered
-        sx={{ mb: 3 }}
-      >
-        <Tab label="PDF Upload" />
-        <Tab label="Picture Upload" />
-      </Tabs>
-
       <Typography gutterBottom>
-        {tabValue === 0 
-          ? `Please upload your PDF file (max ${MAX_FILE_SIZE / 1024 / 1024}MB):`
-          : `Please upload your image file (max ${MAX_FILE_SIZE / 1024 / 1024}MB):`
-        }
+        Upload PDF files or images (max {MAX_FILE_SIZE / 1024 / 1024}MB):
       </Typography>
 
       <Paper
@@ -142,7 +139,7 @@ const UploadSection = () => {
         }}
       >
         <input
-          accept={tabValue === 0 ? "application/pdf" : "image/*"}
+          accept="application/pdf,image/*"
           style={{ display: 'none' }}
           id="file-upload"
           type="file"
@@ -155,8 +152,8 @@ const UploadSection = () => {
           </Box>
           <Typography variant="body1" gutterBottom>
             {dragActive 
-              ? `Drop your ${tabValue === 0 ? 'PDF' : 'image'} here` 
-              : `Drag and drop your ${tabValue === 0 ? 'PDF' : 'image'} here, or click to select`
+              ? 'Drop your PDF or image here' 
+              : 'Drag and drop your PDF or image here, or click to select'
             }
           </Typography>
           <Button
